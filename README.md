@@ -18,3 +18,37 @@ If you want to learn more about creating good readme files then refer the follow
 - [ASP.NET Core](https://github.com/aspnet/Home)
 - [Visual Studio Code](https://github.com/Microsoft/vscode)
 - [Chakra Core](https://github.com/Microsoft/ChakraCore)
+
+
+## Comandos utilizados para criar o projeto:
+### Comandos para criar pastas que gosto de utilizar:
+mkdir src
+mkdir tests
+mkdir docs
+mkdir scripts
+
+### Comando para gerar arquivo gitignore usando template de .NET:
+dotnet new gitignore
+
+### Comando para criar uma nova solution:
+dotnet new sln -n Fiap.Health.Med.Schedule.Manager
+
+### Comandos para criar uma nova biblioteca genérica:
+dotnet new classlib -n Fiap.Health.Med.Schedule.Manager.Infrastructure
+dotnet new classlib -n Fiap.Health.Med.Schedule.Manager.Application
+dotnet new classlib -n Fiap.Health.Med.Schedule.Manager.CrossCutting
+dotnet new classlib -n Fiap.Health.Med.Schedule.Manager.Domain
+dotnet new classlib -n Fiap.Health.Med.Schedule.Manager.Worker
+
+### Comando para criar uma nova biblioteca de testes unitários utilizando o template do xUnit para:
+dotnet new xunit -n Fiap.Health.Med.Schedule.Manager.UnitTests
+
+### Comando para criar uma nova biblioteca para API utilizando o template de APIs Rest:
+dotnet new webapi -n Fiap.Health.Med.Schedule.Manager.Apidotnet sln Fiap.Health.Med.Schedule.Manager.sln add src/Fiap.Health.Med.Schedule.Manager.Application/Fiap.Health.Med.Schedule.Manager.Application.csproj
+
+### Comandos para adicionar projetos na solução:
+dotnet sln Fiap.Health.Med.Schedule.Manager.sln add src/Fiap.Health.Med.Schedule.Manager.CrossCutting/Fiap.Health.Med.Schedule.Manager.CrossCutting.csproj
+dotnet sln Fiap.Health.Med.Schedule.Manager.sln add src/Fiap.Health.Med.Schedule.Manager.Domain/Fiap.Health.Med.Schedule.Manager.Domain.csproj
+dotnet sln Fiap.Health.Med.Schedule.Manager.sln add src/Fiap.Health.Med.Schedule.Manager.Infrastructure/Fiap.Health.Med.Schedule.Manager.Infrastructure.csproj
+dotnet sln Fiap.Health.Med.Schedule.Manager.sln add src/Fiap.Health.Med.Schedule.Manager.Worker/Fiap.Health.Med.Schedule.Manager.Worker.csproj
+dotnet sln Fiap.Health.Med.Schedule.Manager.sln add tests/Fiap.Health.Med.Schedule.Manager.UnitTests/Fiap.Health.Med.Schedule.Manager.UnitTests.csproj
