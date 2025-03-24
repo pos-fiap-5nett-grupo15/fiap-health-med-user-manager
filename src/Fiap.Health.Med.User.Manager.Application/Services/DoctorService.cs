@@ -1,4 +1,5 @@
 ﻿using Fiap.Health.Med.User.Manager.Application.DTOs;
+using Fiap.Health.Med.User.Manager.Application.Interfaces;
 using Fiap.Health.Med.User.Manager.Application.Validators;
 using Fiap.Health.Med.User.Manager.Domain.Interfaces;
 using Fiap.Health.Med.User.Manager.Domain.Models.Doctor;
@@ -6,21 +7,21 @@ using FluentValidation;
 
 namespace Fiap.Health.Med.User.Manager.Application.Services
 {
-    public class DoctorService
+    public class DoctorService : IDoctorService
     {
-        private readonly IDoctorRepository _repository;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IValidator<Doctor> _validator;
 
-        public DoctorService(IDoctorRepository repository)
+        public DoctorService(IUnitOfWork unitOfWork)
         {
-            _repository = repository;
+            this._unitOfWork = unitOfWork;
             _validator = new DoctorValidator();
         }
 
         public async Task<IEnumerable<DoctorResponseDto>> GetAllAsync()
         {
 
-            var retorno = await _repository.GetAllAsync();
+            var retorno = await this._unitOfWork.DoctorRepository.GetAllAsync();
 
             var responseDto = retorno.Select(m => new DoctorResponseDto
             {
@@ -37,7 +38,7 @@ namespace Fiap.Health.Med.User.Manager.Application.Services
 
         public async Task<DoctorResponseDto> GetByIdAsync(int id) {
 
-            var retorno = await _repository.GetByIdAsync(id);
+            var retorno = await this._unitOfWork.DoctorRepository.GetByIdAsync(id);
 
             var responseDto = new DoctorResponseDto
             {
@@ -59,7 +60,7 @@ namespace Fiap.Health.Med.User.Manager.Application.Services
             if (!validationResult.IsValid)
                 throw new ValidationException(validationResult.Errors);
 
-            return await _repository.AddAsync(doctor);
+            return await this._unitOfWork.DoctorRepository.AddAsync(doctor);
         }
 
         public async Task UpdateAsync(Doctor doctor)
@@ -69,9 +70,9 @@ namespace Fiap.Health.Med.User.Manager.Application.Services
             if (!validationResult.IsValid)
                 throw new ValidationException(validationResult.Errors);
 
-            await _repository.UpdateAsync(doctor);
+            await this._unitOfWork.DoctorRepository.UpdateAsync(doctor);
         }
 
-        public async Task DeleteAsync(int id) => await _repository.DeleteAsync(id);
+        public async Task DeleteAsync(int id) => await this._unitOfWork.DoctorRepository.DeleteAsync(id);
     }
 }

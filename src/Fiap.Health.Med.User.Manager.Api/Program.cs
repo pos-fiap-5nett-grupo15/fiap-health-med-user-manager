@@ -1,8 +1,6 @@
-using Fiap.Health.Med.User.Manager.Application.Services;
-using Fiap.Health.Med.User.Manager.Domain.Interfaces;
-using Fiap.Health.Med.User.Manager.Infrastructure.Repositories;
+using Fiap.Health.Med.User.Manager.Api;
+using Fiap.Health.Med.User.Manager.CrossCutting;
 using Microsoft.Data.SqlClient;
-using Microsoft.OpenApi.Models;
 
 internal class Program
 {
@@ -10,23 +8,11 @@ internal class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        // Add services to the container.
-        // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-
-        // Adiciona os serviços da API e do Swagger
-        builder.Services.AddControllers();
-        builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen(c =>
-        {
-            c.SwaggerDoc("v1", new OpenApiInfo { Title = "API Hackaton", Version = "v1" });
-        });
-        builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen();
+        var startup = new Startup(builder.Configuration);
+        startup.ConfigureServices(builder.Services);
+        builder.Services.Migrations(builder.Configuration);
 
         builder.Services.AddSingleton(new SqlConnection(builder.Configuration.GetConnectionString("DefaultConnection")));
-
-        builder.Services.AddScoped<IDoctorRepository, DoctorRepository>();
-        builder.Services.AddScoped<DoctorService>();
 
         var app = builder.Build();
 

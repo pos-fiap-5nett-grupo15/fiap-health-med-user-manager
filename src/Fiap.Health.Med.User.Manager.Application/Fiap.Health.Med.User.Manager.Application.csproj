@@ -15,7 +15,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Fiap.Health.Med.User.Manager.CrossCutting\Fiap.Health.Med.User.Manager.CrossCutting.csproj" />
     <ProjectReference Include="..\Fiap.Health.Med.User.Manager.Domain\Fiap.Health.Med.User.Manager.Domain.csproj" />
   </ItemGroup>
 
