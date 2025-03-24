@@ -22,7 +22,7 @@ namespace Fiap.Health.Med.User.Manager.Application.Services
 
             var retorno = await _repository.GetAllAsync();
 
-            var response = retorno.Select(m => new DoctorResponseDto
+            var responseDto = retorno.Select(m => new DoctorResponseDto
             {
                 Id = m.Id,
                 CrmNumber = m.CrmNumber,
@@ -32,14 +32,14 @@ namespace Fiap.Health.Med.User.Manager.Application.Services
                 MedicalSpecialty = m.MedicalSpecialty
             });
 
-            return response;
+            return responseDto;
         }
 
         public async Task<DoctorResponseDto> GetByIdAsync(int id) {
 
             var retorno = await _repository.GetByIdAsync(id);
 
-            var response = new DoctorResponseDto
+            var responseDto = new DoctorResponseDto
             {
                 Id = retorno.Id,
                 CrmNumber = retorno.CrmNumber,
@@ -49,7 +49,7 @@ namespace Fiap.Health.Med.User.Manager.Application.Services
                 MedicalSpecialty = retorno.MedicalSpecialty
             };
 
-            return response;
+            return responseDto;
         }
 
         public async Task<int> AddAsync(Doctor doctor)
