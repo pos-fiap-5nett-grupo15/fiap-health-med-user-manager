@@ -13,12 +13,8 @@
   </ItemGroup>
 
 	<ItemGroup>
-    <ProjectReference Include="..\..\tests\Fiap.Health.Med.User.Manager.UnitTests\Fiap.Health.Med.User.Manager.UnitTests.csproj" />
     <ProjectReference Include="..\Fiap.Health.Med.User.Manager.Application\Fiap.Health.Med.User.Manager.Application.csproj" />
     <ProjectReference Include="..\Fiap.Health.Med.User.Manager.CrossCutting\Fiap.Health.Med.User.Manager.CrossCutting.csproj" />
-    <ProjectReference Include="..\Fiap.Health.Med.User.Manager.Domain\Fiap.Health.Med.User.Manager.Domain.csproj" />
-    <ProjectReference Include="..\Fiap.Health.Med.User.Manager.Infrastructure\Fiap.Health.Med.User.Manager.Infrastructure.csproj" />
-    <ProjectReference Include="..\Fiap.Health.Med.User.Manager.Worker\Fiap.Health.Med.User.Manager.Worker.csproj" />
 	</ItemGroup>
 
 </Project>

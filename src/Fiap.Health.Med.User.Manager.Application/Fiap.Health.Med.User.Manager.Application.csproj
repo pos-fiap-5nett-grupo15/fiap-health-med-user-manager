@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Fiap.Health.Med.User.Manager.Domain\Fiap.Health.Med.User.Manager.Domain.csproj" />
+    <ProjectReference Include="..\Fiap.Health.Med.User.Manager.Infrastructure\Fiap.Health.Med.User.Manager.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

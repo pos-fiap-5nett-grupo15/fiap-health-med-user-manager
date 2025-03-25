@@ -5,11 +5,11 @@ namespace Fiap.Health.Med.User.Manager.Application.Interfaces
 {
     public interface IDoctorService
     {
-        Task<IEnumerable<DoctorResponseDto>> GetAllAsync();
-        Task<DoctorResponseDto> GetByIdAsync(int id);
-        Task<int> AddAsync(Doctor doctor);
-        Task UpdateAsync(Doctor doctor);
-        Task DeleteAsync(int id);
+        Task<Result<List<DoctorResponseDto>>> GetAllAsync();
+        Task<Result<DoctorResponseDto>> GetByIdAsync(int id);
+        Task<Result<int>> AddAsync(Doctor doctor);
+        Task<Result> UpdateAsync(Doctor doctor);
+        Task<Result> DeleteAsync(int id);
 
     }
 }
