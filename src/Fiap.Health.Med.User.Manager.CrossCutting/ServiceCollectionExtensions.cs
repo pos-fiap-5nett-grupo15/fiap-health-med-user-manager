@@ -27,6 +27,6 @@ namespace Fiap.Health.Med.User.Manager.CrossCutting
             services.AddScoped<IDoctorRepository, DoctorRepository>();
             return services;
         }
-
+    
     }
 }

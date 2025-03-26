@@ -23,7 +23,7 @@ namespace Fiap.Health.Med.User.Manager.Api
             services.AddControllers();
             services.AddDataServices();
             services.AddServices();
-
+            
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
@@ -34,7 +34,7 @@ namespace Fiap.Health.Med.User.Manager.Api
                 // app.UseSwaggerUI();
             }
             app.UseHttpsRedirection();
-
+        
             app.UseRouting();
             app.UseAuthorization();
             app.UseEndpoints((endpoints) => endpoints.MapControllers());

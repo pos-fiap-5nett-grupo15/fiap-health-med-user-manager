@@ -1,7 +1,3 @@
-using Fiap.Health.Med.User.Manager.Api;
-using Fiap.Health.Med.User.Manager.CrossCutting;
-using Microsoft.Data.SqlClient;
-
 internal class Program
 {
     private static void Main(string[] args)

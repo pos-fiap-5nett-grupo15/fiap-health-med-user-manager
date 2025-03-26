@@ -17,4 +17,5 @@
     <ProjectReference Include="..\Fiap.Health.Med.User.Manager.CrossCutting\Fiap.Health.Med.User.Manager.CrossCutting.csproj" />
 	</ItemGroup>
 
+
 </Project>
