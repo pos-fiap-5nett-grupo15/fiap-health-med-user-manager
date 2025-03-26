@@ -1,3 +1,5 @@
+﻿using Fiap.Health.Med.User.Manager.CrossCutting;
+using Microsoft.OpenApi.Models;
 using IHostingEnvironment = Microsoft.AspNetCore.Hosting.IWebHostEnvironment;
 
 namespace Fiap.Health.Med.User.Manager.Api
@@ -13,9 +15,14 @@ namespace Fiap.Health.Med.User.Manager.Api
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "API Hackaton", Version = "v1" });
+            });
+            services.AddEndpointsApiExplorer();
             services.AddControllers();
-            // services.AddDataServices();
-            // services.AddServices();
+            services.AddDataServices();
+            services.AddServices();
             
         }
 

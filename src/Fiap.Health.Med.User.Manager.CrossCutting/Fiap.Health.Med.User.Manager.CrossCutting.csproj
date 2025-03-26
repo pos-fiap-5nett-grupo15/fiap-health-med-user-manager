@@ -8,13 +8,17 @@
 
   <ItemGroup>
     <Folder Include="Extensions\" />
+    <Folder Include="Security\" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="FluentMigrator.Runner" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.3" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.3" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Fiap.Health.Med.User.Manager.Application\Fiap.Health.Med.User.Manager.Application.csproj" />
     <ProjectReference Include="..\Fiap.Health.Med.User.Manager.Infrastructure\Fiap.Health.Med.User.Manager.Infrastructure.csproj" />
   </ItemGroup>
 

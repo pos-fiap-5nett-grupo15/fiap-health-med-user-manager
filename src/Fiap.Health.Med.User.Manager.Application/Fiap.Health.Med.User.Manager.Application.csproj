@@ -8,7 +8,15 @@
 
   <ItemGroup>
     <Folder Include="Models\" />
-    <Folder Include="Services\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentValidation" Version="11.11.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Fiap.Health.Med.User.Manager.Domain\Fiap.Health.Med.User.Manager.Domain.csproj" />
+    <ProjectReference Include="..\Fiap.Health.Med.User.Manager.Infrastructure\Fiap.Health.Med.User.Manager.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

@@ -8,15 +8,14 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.7" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="6.0.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
 
 	<ItemGroup>
-		<Folder Include="Controllers\" />
+    <ProjectReference Include="..\Fiap.Health.Med.User.Manager.Application\Fiap.Health.Med.User.Manager.Application.csproj" />
+    <ProjectReference Include="..\Fiap.Health.Med.User.Manager.CrossCutting\Fiap.Health.Med.User.Manager.CrossCutting.csproj" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <ProjectReference Include="..\Fiap.Health.Med.User.Manager.CrossCutting\Fiap.Health.Med.User.Manager.CrossCutting.csproj" />
-	</ItemGroup>
 
 </Project>
