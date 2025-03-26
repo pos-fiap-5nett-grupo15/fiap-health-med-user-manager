@@ -1,3 +1,6 @@
+using Fiap.Health.Med.User.Manager.Api;
+using Microsoft.Data.SqlClient;
+
 internal class Program
 {
     private static void Main(string[] args)
