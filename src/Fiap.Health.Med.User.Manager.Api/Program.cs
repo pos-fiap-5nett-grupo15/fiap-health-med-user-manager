@@ -1,4 +1,5 @@
 using Fiap.Health.Med.User.Manager.Api;
+using Fiap.Health.Med.User.Manager.CrossCutting;
 using Microsoft.Data.SqlClient;
 
 internal class Program
@@ -9,7 +10,9 @@ internal class Program
 
         var startup = new Startup(builder.Configuration);
         startup.ConfigureServices(builder.Services);
-
+        
+        builder.Services.Migrations(builder.Configuration);
+        
         builder.Services.AddSingleton(new SqlConnection(builder.Configuration.GetConnectionString("DefaultConnection")));
 
         var app = builder.Build();
