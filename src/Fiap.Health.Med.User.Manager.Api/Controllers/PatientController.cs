@@ -1,6 +1,6 @@
-﻿using Fiap.Health.Med.User.Manager.Application.DTOs.Doctor.CreateDoctor;
-using Fiap.Health.Med.User.Manager.Application.DTOs.Doctor.GetDoctorById;
-using Fiap.Health.Med.User.Manager.Application.DTOs.Doctor.UpdateDoctor;
+﻿using Fiap.Health.Med.User.Manager.Application.DTOs.Patient.CreatePatient;
+using Fiap.Health.Med.User.Manager.Application.DTOs.Patient.GetPatient;
+using Fiap.Health.Med.User.Manager.Application.DTOs.Patient.UpdatePatient;
 using Fiap.Health.Med.User.Manager.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
@@ -10,17 +10,17 @@ namespace Fiap.Health.Med.User.Manager.Api.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    public class DoctorController : ControllerBase
+    public class PatientController : ControllerBase
     {
-        private readonly IDoctorService _service;
+        private readonly IPatientService _service;
 
-        public DoctorController(IDoctorService service)
+        public PatientController(IPatientService service)
         {
             _service = service;
         }
 
         [HttpGet]
-        [SwaggerResponse((int)HttpStatusCode.OK, Type = typeof(List<GetDoctorOutput>))]
+        [SwaggerResponse((int)HttpStatusCode.OK, Type = typeof(List<GetPatientOutput>))]
         [SwaggerResponse((int)HttpStatusCode.BadRequest)]
         [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
         public async Task<IActionResult> GetAllAsync()
@@ -32,10 +32,10 @@ namespace Fiap.Health.Med.User.Manager.Api.Controllers
         }
 
         [HttpGet("{id}")]
-        [SwaggerResponse((int)HttpStatusCode.OK, Type = typeof(GetDoctorOutput))]
+        [SwaggerResponse((int)HttpStatusCode.OK, Type = typeof(GetPatientOutput))]
         [SwaggerResponse((int)HttpStatusCode.NotFound)]
         [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
-        public async Task<ActionResult<GetDoctorOutput>> GetOneAsync(int id)
+        public async Task<ActionResult<GetPatientOutput>> GetOneAsync(int id)
         {
             if (await _service.GetByIdAsync(id) is var result && !result.Success)
                 return NotFound(result.Errors);
@@ -47,9 +47,9 @@ namespace Fiap.Health.Med.User.Manager.Api.Controllers
         [SwaggerResponse((int)HttpStatusCode.NoContent)]
         [SwaggerResponse((int)HttpStatusCode.BadRequest)]
         [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
-        public async Task<IActionResult> CreateAsync([FromBody] CreateDoctorInput doctor)
+        public async Task<IActionResult> CreateAsync([FromBody] CreatePatientInput patient)
         {
-            if (await _service.AddAsync(doctor) is var result && !result.Success)
+            if (await _service.AddAsync(patient) is var result && !result.Success)
                 return BadRequest(result.Errors);
 
             return NoContent();
@@ -59,12 +59,12 @@ namespace Fiap.Health.Med.User.Manager.Api.Controllers
         [SwaggerResponse((int)HttpStatusCode.NoContent)]
         [SwaggerResponse((int)HttpStatusCode.BadRequest)]
         [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
-        public async Task<IActionResult> PutAsync(int id, [FromBody] UpdateDoctorInput doctor)
+        public async Task<IActionResult> PutAsync(int id, [FromBody] UpdatePatientInput patient)
         {
             if (id == default)
                 return BadRequest();
 
-            if (await _service.UpdateAsync(id, doctor) is var result && !result.Success)
+            if (await _service.UpdateAsync(id, patient) is var result && !result.Success)
                 return BadRequest(result.Errors);
 
             return NoContent();

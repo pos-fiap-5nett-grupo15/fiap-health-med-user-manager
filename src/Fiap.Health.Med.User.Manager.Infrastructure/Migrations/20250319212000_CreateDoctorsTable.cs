@@ -3,7 +3,8 @@ using FluentMigrator;
 namespace Fiap.Health.Med.User.Manager.Infrastructure.Migrations;
 
 [Migration(20250319212000)]
-public class CreateDoctorsTable : Migration {
+public class CreateDoctorsTable : Migration
+{
     public override void Up()
     {
         Create.Schema("Users");

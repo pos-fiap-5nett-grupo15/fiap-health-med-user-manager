@@ -23,7 +23,7 @@ namespace Fiap.Health.Med.User.Manager.Api
             services.AddControllers();
             services.AddDataServices();
             services.AddServices();
-            
+            services.AddValidators();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)

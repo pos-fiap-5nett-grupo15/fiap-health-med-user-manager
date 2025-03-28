@@ -1,6 +1,7 @@
-﻿using Fiap.Health.Med.User.Manager.Application.DTOs;
+﻿using Fiap.Health.Med.User.Manager.Application.DTOs.Doctor.CreateDoctor;
+using Fiap.Health.Med.User.Manager.Application.DTOs.Doctor.GetDoctorById;
+using Fiap.Health.Med.User.Manager.Application.DTOs.Doctor.UpdateDoctor;
 using Fiap.Health.Med.User.Manager.Application.Interfaces;
-using Fiap.Health.Med.User.Manager.Application.Validators;
 using Fiap.Health.Med.User.Manager.Domain.Interfaces;
 using Fiap.Health.Med.User.Manager.Domain.Models.Doctor;
 using FluentValidation;
@@ -10,21 +11,26 @@ namespace Fiap.Health.Med.User.Manager.Application.Services
     public class DoctorService : IDoctorService
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IValidator<Doctor> _validator;
+        private readonly IValidator<CreateDoctorInput> _createDoctorInputValidator;
+        private readonly IValidator<UpdateDoctorInput> _updateDoctorInputValidator;
 
-        public DoctorService(IUnitOfWork unitOfWork)
+        public DoctorService(
+            IUnitOfWork unitOfWork,
+            IValidator<CreateDoctorInput> createDoctorInputValidator,
+            IValidator<UpdateDoctorInput> updateDoctorInputValidator)
         {
             this._unitOfWork = unitOfWork;
-            _validator = new DoctorValidator();
+            _createDoctorInputValidator = createDoctorInputValidator;
+            _updateDoctorInputValidator = updateDoctorInputValidator;
         }
 
-        public async Task<Result<List<DoctorResponseDto>>> GetAllAsync()
+        public async Task<Result<List<GetDoctorOutput>>> GetAllAsync()
         {
             try
             {
                 var retorno = await this._unitOfWork.DoctorRepository.GetAllAsync();
 
-                var responseDto = retorno.Select(m => new DoctorResponseDto
+                var responseDto = retorno.Select(m => new GetDoctorOutput
                 {
                     Id = m.Id,
                     CrmNumber = m.CrmNumber,
@@ -34,24 +40,24 @@ namespace Fiap.Health.Med.User.Manager.Application.Services
                     MedicalSpecialty = m.MedicalSpecialty
                 });
 
-                return Result<List<DoctorResponseDto>>.Ok(responseDto.ToList());
+                return Result<List<GetDoctorOutput>>.Ok(responseDto.ToList());
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return Result<List<DoctorResponseDto>>.Fail("Erro ao buscar médicos.");
+                return Result<List<GetDoctorOutput>>.Fail($"Erro ao buscar médicos: '{e.Message}'");
             }
         }
 
-        public async Task<Result<DoctorResponseDto>> GetByIdAsync(int id) {
-
+        public async Task<Result<GetDoctorOutput>> GetByIdAsync(int id)
+        {
             try
             {
                 var doctor = await this._unitOfWork.DoctorRepository.GetByIdAsync(id);
 
                 if (doctor == null)
-                    return Result<DoctorResponseDto>.Fail("Médico não encontrado.");
+                    return Result<GetDoctorOutput>.Fail("Médico não encontrado.");
 
-                var responseDto = new DoctorResponseDto
+                var responseDto = new GetDoctorOutput
                 {
                     Id = doctor.Id,
                     CrmNumber = doctor.CrmNumber,
@@ -61,57 +67,69 @@ namespace Fiap.Health.Med.User.Manager.Application.Services
                     MedicalSpecialty = doctor.MedicalSpecialty
                 };
 
-                return Result<DoctorResponseDto>.Ok(responseDto);
+                return Result<GetDoctorOutput>.Ok(responseDto);
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return Result<DoctorResponseDto>.Fail("Erro ao buscar médico.");
+                return Result<GetDoctorOutput>.Fail($"Erro ao buscar médico: '{e.Message}'");
             }
-
         }
 
-        public async Task<Result<int>> AddAsync(Doctor doctor)
+        public async Task<Result<int>> AddAsync(CreateDoctorInput createDoctorInput)
         {
             try
             {
-                var validationResult = await _validator.ValidateAsync(doctor);
+                var validationResult = await _createDoctorInputValidator.ValidateAsync(createDoctorInput);
 
                 if (!validationResult.IsValid)
                     return Result<int>.Fail(validationResult.Errors.Select(e => e.ErrorMessage).ToList());
 
-                int doctorId = await this._unitOfWork.DoctorRepository.AddAsync(doctor);
+                int doctorId = await this._unitOfWork.DoctorRepository.AddAsync(new Doctor
+                {
+                    CrmNumber = createDoctorInput.CrmNumber,
+                    CrmUf = createDoctorInput.CrmUf,
+                    Name = createDoctorInput.Name,
+                    HashedPassword = createDoctorInput.HashedPassword,
+                    Email = createDoctorInput.Email,
+                    MedicalSpecialty = createDoctorInput.MedicalSpecialty
+                });
 
                 return Result<int>.Ok(doctorId);
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return Result<int>.Fail("Erro ao criar médico.");
+                return Result<int>.Fail($"Erro ao criar médico: '{e.Message}'");
             }
         }
 
-        public async Task<Result> UpdateAsync(Doctor doctor)
+        public async Task<Result> UpdateAsync(int doctorId, UpdateDoctorInput updateDoctorInput)
         {
-
             try
             {
-                var validationResult = _validator.Validate(doctor);
+                var validationResult = _updateDoctorInputValidator.Validate(updateDoctorInput);
 
                 if (!validationResult.IsValid)
                     return Result.Fail(validationResult.Errors.Select(e => e.ErrorMessage).ToList());
 
-                var existingDoctor = await this._unitOfWork.DoctorRepository.GetByIdAsync(doctor.Id);
+                var existingDoctor = await this._unitOfWork.DoctorRepository.GetByIdAsync(doctorId);
 
                 if (existingDoctor == null)
                     return Result.Fail("Médico não encontrado.");
 
-                await this._unitOfWork.DoctorRepository.UpdateAsync(doctor);
+                await this._unitOfWork.DoctorRepository.UpdateAsync(new Doctor
+                {
+                    CrmNumber = updateDoctorInput.CrmNumber ?? existingDoctor.CrmNumber,
+                    CrmUf = updateDoctorInput.CrmUf ?? existingDoctor.CrmUf,
+                    Name = updateDoctorInput.Name ?? existingDoctor.Name,
+                    HashedPassword = updateDoctorInput.HashedPassword ?? existingDoctor.HashedPassword,
+                    Email = updateDoctorInput.Email ?? existingDoctor.Email,
+                    MedicalSpecialty = updateDoctorInput.MedicalSpecialty ?? existingDoctor.MedicalSpecialty
+                });
             }
-
-            catch (Exception)
+            catch (Exception e)
             {
-                return Result.Fail("Erro ao atualizar médico.");
+                return Result.Fail($"Erro ao atualizar médico: '{e.Message}'");
             }
-               
             return Result.Ok();
         }
 
@@ -128,9 +146,9 @@ namespace Fiap.Health.Med.User.Manager.Application.Services
 
                 return Result.Ok();
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return Result.Fail("Erro ao excluir médico.");
+                return Result.Fail($"Erro ao excluir médico: '{e.Message}'");
             }
         }
     }
