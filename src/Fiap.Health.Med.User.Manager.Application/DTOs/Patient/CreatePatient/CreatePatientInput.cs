@@ -4,7 +4,7 @@
     {
         public required string Name { get; set; }
         public required long Document { get; set; }
-        public required string HashedPassword { get; set; }
+        public required string Password { get; set; }
         public required string Email { get; set; }
     }
 }

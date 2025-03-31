@@ -1,10 +1,13 @@
-﻿using Fiap.Health.Med.User.Manager.Application.DTOs.Doctor.CreateDoctor;
+﻿using Fiap.Health.Med.Infra.Enums;
+using Fiap.Health.Med.User.Manager.Application.DTOs.Auth.UserSearch;
+using Fiap.Health.Med.User.Manager.Application.DTOs.Doctor.CreateDoctor;
 using Fiap.Health.Med.User.Manager.Application.DTOs.Doctor.GetDoctorById;
 using Fiap.Health.Med.User.Manager.Application.DTOs.Doctor.UpdateDoctor;
 using Fiap.Health.Med.User.Manager.Application.Interfaces;
 using Fiap.Health.Med.User.Manager.Domain.Interfaces;
 using Fiap.Health.Med.User.Manager.Domain.Models.Doctor;
 using FluentValidation;
+using BCrypt;
 
 namespace Fiap.Health.Med.User.Manager.Application.Services
 {
@@ -75,6 +78,27 @@ namespace Fiap.Health.Med.User.Manager.Application.Services
             }
         }
 
+        public async Task<Result<UserSearchResponseDto>> GetByConcilAsync(string concilUf, int concilNumber)
+        {
+            try
+            {
+                var doctor = await this._unitOfWork.DoctorRepository.GetByConcilAsync(concilUf, concilNumber);
+                if (doctor == null)
+                    return Result<UserSearchResponseDto>.Fail("Médico não encontrado.");
+                var responseDto = new UserSearchResponseDto
+                {
+                    Username = $"{doctor.CrmUf}{doctor.CrmNumber}",
+                    HashPassword = doctor.HashedPassword,
+                    UserType = EUserType.Doctor
+                };
+                return Result<UserSearchResponseDto>.Ok(responseDto);
+            }
+            catch (Exception e)
+            {
+                return Result<UserSearchResponseDto>.Fail($"Erro ao buscar médico: '{e.Message}'");
+            }
+        }
+
         public async Task<Result<int>> AddAsync(CreateDoctorInput createDoctorInput)
         {
             try
@@ -89,7 +113,7 @@ namespace Fiap.Health.Med.User.Manager.Application.Services
                     CrmNumber = createDoctorInput.CrmNumber,
                     CrmUf = createDoctorInput.CrmUf,
                     Name = createDoctorInput.Name,
-                    HashedPassword = createDoctorInput.HashedPassword,
+                    HashedPassword = BCryptHelper.HashPassword(createDoctorInput.Password, BCryptHelper.GenerateSalt()),
                     Email = createDoctorInput.Email,
                     MedicalSpecialty = createDoctorInput.MedicalSpecialty
                 });

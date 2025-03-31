@@ -43,6 +43,18 @@ namespace Fiap.Health.Med.User.Manager.Api.Controllers
             return Ok(result.Data);
         }
 
+        [HttpGet("Document/{document}")]
+        [SwaggerResponse((int)HttpStatusCode.OK, Type = typeof(GetPatientOutput))]
+        [SwaggerResponse((int)HttpStatusCode.NotFound)]
+        [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
+        public async Task<ActionResult<GetPatientOutput>> GetOneByDocumentAsync(long document)
+        {
+            if (await _service.GetByDocumentAsync(document) is var result && !result.Success)
+                return NotFound(result.Errors);
+
+            return Ok(result.Data);
+        }
+
         [HttpPost]
         [SwaggerResponse((int)HttpStatusCode.NoContent)]
         [SwaggerResponse((int)HttpStatusCode.BadRequest)]

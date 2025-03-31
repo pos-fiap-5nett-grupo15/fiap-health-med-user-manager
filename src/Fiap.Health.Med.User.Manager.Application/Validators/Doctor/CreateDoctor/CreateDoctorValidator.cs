@@ -25,8 +25,12 @@ namespace Fiap.Health.Med.User.Manager.Application.Validators.Doctor.CreateDocto
             RuleFor(m => m.MedicalSpecialty)
                     .IsInEnum().WithMessage("Especialidade inválida.");
 
-            RuleFor(m => m.HashedPassword)
-             .NotEmpty().WithMessage("A senha é obrigatória.");
+            RuleFor(m => m.Password)
+                    .NotEmpty().WithMessage("A senha é obrigatória.")
+                    .MinimumLength(8).WithMessage("A senha deve ter pelo menos 8 caracteres.")
+                    .Matches(@"[A-Z]").WithMessage("A senha deve conter ao menos uma letra maiúscula.")
+                    .Matches(@"[0-9]").WithMessage("A senha deve conter ao menos um número.")
+                    .Matches("[!@#$%^&*(),.?\":{ }|<>]").WithMessage("A senha deve conter ao menos um caractere especial.");
         }
     }
 }

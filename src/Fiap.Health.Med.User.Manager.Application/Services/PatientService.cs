@@ -5,6 +5,9 @@ using Fiap.Health.Med.User.Manager.Application.Interfaces;
 using Fiap.Health.Med.User.Manager.Domain.Interfaces;
 using Fiap.Health.Med.User.Manager.Domain.Models.Patient;
 using FluentValidation;
+using BCrypt;
+using Fiap.Health.Med.User.Manager.Application.DTOs.Auth.UserSearch;
+using Fiap.Health.Med.Infra.Enums;
 
 namespace Fiap.Health.Med.User.Manager.Application.Services
 {
@@ -64,6 +67,23 @@ namespace Fiap.Health.Med.User.Manager.Application.Services
             return Result<GetPatientOutput>.Ok(responseDto);
         }
 
+        public async Task<Result<UserSearchResponseDto>> GetByDocumentAsync(long document)
+        {
+            (var patient, var errorMessage) = await this._unitOfWork.PatientRepository.GetByDocumentAsync(document);
+
+            if (patient is null)
+                return Result<UserSearchResponseDto>.Fail($"Paciente não encontrado: {errorMessage}");
+
+            var responseDto = new UserSearchResponseDto
+            {
+                Username = $"{patient.Document}",
+                HashPassword = patient.HashedPassword,
+                UserType = EUserType.Patient
+            };
+
+            return Result<UserSearchResponseDto>.Ok(responseDto);
+        }
+
         public async Task<Result> AddAsync(CreatePatientInput createPatientInput)
         {
             var validationResult = await _createPatientInputValidator.ValidateAsync(createPatientInput);
@@ -75,7 +95,7 @@ namespace Fiap.Health.Med.User.Manager.Application.Services
             {
                 Document = createPatientInput.Document,
                 Name = createPatientInput.Name,
-                HashedPassword = createPatientInput.HashedPassword,
+                HashedPassword = BCryptHelper.HashPassword(createPatientInput.Password, BCryptHelper.GenerateSalt()),
                 Email = createPatientInput.Email
             });
 

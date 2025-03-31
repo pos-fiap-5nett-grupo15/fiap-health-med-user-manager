@@ -49,6 +49,26 @@ namespace Fiap.Health.Med.User.Manager.Infrastructure.Repositories
             }
         }
 
+        public async Task<(Patient?, string)> GetByDocumentAsync(long document)
+        {
+            try
+            {
+                var query = @$"SELECT
+                            {nameof(Patient.Id)},
+                            {nameof(Patient.Name)},
+                            {nameof(Patient.Email)},
+                            {nameof(Patient.Document)},
+                            {nameof(Patient.HashedPassword)}
+                          FROM Users.Patients 
+                          WHERE {nameof(Patient.Document)} = @Document";
+                return (await _database.Connection.QueryFirstOrDefaultAsync<Patient>(query, new { Document = document }), string.Empty);
+            }
+            catch (Exception e)
+            {
+                return (null, e.Message);
+            }
+        }
+
         public async Task<(bool, string)> AddAsync(Patient patient)
         {
             try

@@ -31,6 +31,15 @@ namespace Fiap.Health.Med.User.Manager.Infrastructure.Repositories
             return await _database.Connection.QueryFirstOrDefaultAsync<Doctor>(query, new { Id = id });
         }
 
+        public async Task<Doctor?> GetByConcilAsync(string concilUf, int concilNumber)
+        {
+            var query = @"SELECT Id, CrmNumber, CrmUf, Name, HashedPassword, MedicalSpecialty, Email 
+                      FROM Users.Doctors 
+                      WHERE CrmNumber = @CrmNumber AND CrmUf = @CrmUf";
+
+            return await _database.Connection.QueryFirstOrDefaultAsync<Doctor>(query, new { CrmNumber = concilNumber, CrmUf = concilUf });
+        }
+
         public async Task<int> AddAsync(Doctor doctor)
         {
 

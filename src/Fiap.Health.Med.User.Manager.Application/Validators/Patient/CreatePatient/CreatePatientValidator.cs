@@ -19,8 +19,12 @@ namespace Fiap.Health.Med.User.Manager.Application.Validators.Patient.CreatePati
                 .NotEmpty().WithMessage("Email é obrigatório.")
                 .EmailAddress().WithMessage("Email inválido.");
 
-            RuleFor(x => x.HashedPassword)
-                .NotEmpty().WithMessage("A senha é obrigatória.");
+            RuleFor(x => x.Password)
+                .NotEmpty().WithMessage("A senha é obrigatória.")
+                .MinimumLength(8).WithMessage("A senha deve ter pelo menos 8 caracteres.")
+                .Matches(@"[A-Z]").WithMessage("A senha deve conter ao menos uma letra maiúscula.")
+                .Matches(@"[0-9]").WithMessage("A senha deve conter ao menos um número.")
+                .Matches("[!@#$%^&*(),.?\":{ }|<>]").WithMessage("A senha deve conter ao menos um caractere especial.");
         }
     }
 }
