@@ -1,4 +1,5 @@
-﻿using Fiap.Health.Med.User.Manager.Application.DTOs.Doctor.CreateDoctor;
+﻿using Fiap.Health.Med.User.Manager.Application.DTOs.Auth.UserSearch;
+using Fiap.Health.Med.User.Manager.Application.DTOs.Doctor.CreateDoctor;
 using Fiap.Health.Med.User.Manager.Application.DTOs.Doctor.GetDoctorById;
 using Fiap.Health.Med.User.Manager.Application.DTOs.Doctor.UpdateDoctor;
 using Fiap.Health.Med.User.Manager.Application.Interfaces;
@@ -38,6 +39,18 @@ namespace Fiap.Health.Med.User.Manager.Api.Controllers
         public async Task<ActionResult<GetDoctorOutput>> GetOneAsync(int id)
         {
             if (await _service.GetByIdAsync(id) is var result && !result.Success)
+                return NotFound(result.Errors);
+
+            return Ok(result.Data);
+        }
+
+        [HttpGet("{concilUf}/{concilNumber}")]
+        [SwaggerResponse((int)HttpStatusCode.OK, Type = typeof(UserSearchResponseDto))]
+        [SwaggerResponse((int)HttpStatusCode.NotFound)]
+        [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
+        public async Task<ActionResult<UserSearchResponseDto>> GetOneByConcilAsync(string concilUf, int concilNumber)
+        {
+            if (await _service.GetByConcilAsync(concilUf, concilNumber) is var result && !result.Success)
                 return NotFound(result.Errors);
 
             return Ok(result.Data);

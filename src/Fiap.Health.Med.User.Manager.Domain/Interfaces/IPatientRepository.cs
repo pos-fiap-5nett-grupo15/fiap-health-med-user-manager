@@ -6,6 +6,7 @@ namespace Fiap.Health.Med.User.Manager.Domain.Interfaces
     {
         Task<(IEnumerable<Patient>, string)> GetAllAsync();
         Task<(Patient?, string)> GetByIdAsync(int id);
+        Task<(Patient?, string)> GetByDocumentAsync(long document);
         Task<(bool, string)> AddAsync(Patient patient);
         Task<(bool, string)> UpdateAsync(Patient patient);
         Task<(bool, string)> DeleteAsync(int id);

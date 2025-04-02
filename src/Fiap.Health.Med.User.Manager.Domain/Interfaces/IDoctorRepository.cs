@@ -6,6 +6,7 @@ namespace Fiap.Health.Med.User.Manager.Domain.Interfaces
     {
         Task<IEnumerable<Doctor>> GetAllAsync();
         Task<Doctor> GetByIdAsync(int id);
+        Task<Doctor?> GetByConcilAsync(string concilUf, int concilNumber);
         Task<int> AddAsync(Doctor doctor);
         Task UpdateAsync(Doctor doctor);
         Task DeleteAsync(int id);
