@@ -1,4 +1,5 @@
-﻿using Fiap.Health.Med.User.Manager.Application.DTOs.Auth.UserSearch;
+﻿using Fiap.Health.Med.Infra.Enums;
+using Fiap.Health.Med.User.Manager.Application.DTOs.Auth.UserSearch;
 using Fiap.Health.Med.User.Manager.Application.DTOs.Doctor.CreateDoctor;
 using Fiap.Health.Med.User.Manager.Application.DTOs.Doctor.GetDoctorById;
 using Fiap.Health.Med.User.Manager.Application.DTOs.Doctor.UpdateDoctor;
@@ -30,6 +31,24 @@ namespace Fiap.Health.Med.User.Manager.Api.Controllers
                 return BadRequest(result.Errors);
 
             return Ok(result.Data);
+        }
+
+        [HttpGet("filter")]
+        [SwaggerResponse((int)HttpStatusCode.OK, Type = typeof(List<GetDoctorOutput>))]
+        [SwaggerResponse((int)HttpStatusCode.BadRequest)]
+        [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
+        public async Task<IActionResult> GetByFilter([FromQuery] string? doctorName,
+                                                     [FromQuery] EMedicalSpecialty? doctorSpecialty,
+                                                     [FromQuery] int? doctorDoncilNumber,
+                                                     [FromQuery] string? doctorCrmUf)
+        {
+            if (await _service.GetByFilterAsync(doctorName, doctorSpecialty, doctorDoncilNumber, doctorCrmUf) is var result && !result.Success)
+                return StatusCode((int)HttpStatusCode.InternalServerError, result.Errors);
+
+            if (result.Data is not null && result.Data.Any())
+                return Ok(result.Data);
+            else
+                return NotFound("Nenhum médico encontrado com os critérios utilizados");
         }
 
         [HttpGet("{id}")]

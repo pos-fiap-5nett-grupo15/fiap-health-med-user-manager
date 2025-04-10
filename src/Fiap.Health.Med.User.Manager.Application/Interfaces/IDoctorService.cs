@@ -1,4 +1,5 @@
-﻿using Fiap.Health.Med.User.Manager.Application.DTOs.Auth.UserSearch;
+﻿using Fiap.Health.Med.Infra.Enums;
+using Fiap.Health.Med.User.Manager.Application.DTOs.Auth.UserSearch;
 using Fiap.Health.Med.User.Manager.Application.DTOs.Doctor.CreateDoctor;
 using Fiap.Health.Med.User.Manager.Application.DTOs.Doctor.GetDoctorById;
 using Fiap.Health.Med.User.Manager.Application.DTOs.Doctor.UpdateDoctor;
@@ -7,6 +8,7 @@ namespace Fiap.Health.Med.User.Manager.Application.Interfaces
 {
     public interface IDoctorService
     {
+        Task<Result<IEnumerable<GetDoctorOutput>>> GetByFilterAsync(string? doctorName, EMedicalSpecialty? doctorSpecialty, int? doctorDoncilNumber, string? doctorCrmUf);
         Task<Result<List<GetDoctorOutput>>> GetAllAsync();
         Task<Result<GetDoctorOutput>> GetByIdAsync(int id);
         Task<Result<UserSearchResponseDto>> GetByConcilAsync(string concilUf, int concilNumber);

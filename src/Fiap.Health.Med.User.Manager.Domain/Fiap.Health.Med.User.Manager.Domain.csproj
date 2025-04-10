@@ -6,4 +6,10 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Reference Include="Fiap.Health.Med.Infra">
+      <HintPath>..\..\dependencies\Fiap.Health.Med.Infra.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>
