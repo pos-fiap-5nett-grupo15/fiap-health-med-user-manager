@@ -27,6 +27,30 @@ namespace Fiap.Health.Med.User.Manager.Application.Services
             _updateDoctorInputValidator = updateDoctorInputValidator;
         }
 
+        public async Task<Result<IEnumerable<GetDoctorOutput>>> GetByFilterAsync(string? doctorName, EMedicalSpecialty? doctorSpecialty, int? doctorDoncilNumber, string? doctorCrmUf)
+        {
+            try
+            {
+                var response = await this._unitOfWork.DoctorRepository.GetByFilterAsync(doctorName, doctorSpecialty, doctorDoncilNumber, doctorCrmUf);
+
+                var responseDto = response.Select(m => new GetDoctorOutput
+                {
+                    Id = m.Id,
+                    CrmNumber = m.CrmNumber,
+                    CrmUf = m.CrmUf,
+                    Name = m.Name,
+                    Email = m.Email,
+                    MedicalSpecialty = m.MedicalSpecialty
+                });
+
+                return Result<IEnumerable<GetDoctorOutput>>.Ok(responseDto);
+            }
+            catch (Exception e)
+            {
+                return Result<IEnumerable<GetDoctorOutput>>.Fail($"Erro ao buscar médicos: {e.Message}");
+            }
+        }
+
         public async Task<Result<List<GetDoctorOutput>>> GetAllAsync()
         {
             try

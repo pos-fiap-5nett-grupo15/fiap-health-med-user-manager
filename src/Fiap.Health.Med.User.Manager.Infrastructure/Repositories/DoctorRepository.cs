@@ -2,6 +2,7 @@
 using Fiap.Health.Med.User.Manager.Domain.Models.Doctor;
 using Dapper;
 using Fiap.Health.Med.User.Manager.Infrastructure.UnitOfWork;
+using Fiap.Health.Med.Infra.Enums;
 
 namespace Fiap.Health.Med.User.Manager.Infrastructure.Repositories
 {
@@ -66,6 +67,24 @@ namespace Fiap.Health.Med.User.Manager.Infrastructure.Repositories
             var query = @"DELETE FROM Users.Doctors WHERE Id = @Id";
 
             await _database.Connection.ExecuteAsync(query, new { Id = id });
+        }
+
+        public async Task<IEnumerable<Doctor>> GetByFilterAsync(string? doctorName, EMedicalSpecialty? doctorSpecialty, int? doctorConcilNumber, string? doctorCrmUf)
+        {
+            var query = @"SELECT Id, CrmNumber, CrmUf, Name, HashedPassword, MedicalSpecialty, Email 
+                          FROM Users.Doctors 
+                          WHERE (@DoctorName IS NULL OR Name LIKE '%' + @DoctorName + '%') 
+                          AND (@DoctorSpecialty IS NULL OR MedicalSpecialty = @DoctorSpecialty) 
+                          AND (@DoctorConcilNumber IS NULL OR CrmNumber = @DoctorConcilNumber)
+                          AND (@DoctorConcilUf IS NULL OR CrmUf LIKE @DoctorConcilUf)";
+
+            return await _database.Connection.QueryAsync<Doctor>(query, new
+            {
+                DoctorName = doctorName,
+                DoctorSpecialty = doctorSpecialty,
+                DoctorConcilNumber = doctorConcilNumber,
+                DoctorConcilUf = doctorCrmUf
+            });
         }
     }
 }
