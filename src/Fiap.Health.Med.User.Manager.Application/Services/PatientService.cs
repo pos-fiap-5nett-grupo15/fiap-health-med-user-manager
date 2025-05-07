@@ -1,13 +1,15 @@
-﻿using Fiap.Health.Med.User.Manager.Application.DTOs.Patient.CreatePatient;
+﻿using BCrypt;
+using Fiap.Health.Med.Infra.Enums;
+using Fiap.Health.Med.User.Manager.Application.Common;
+using Fiap.Health.Med.User.Manager.Application.DTOs.Auth.UserSearch;
+using Fiap.Health.Med.User.Manager.Application.DTOs.Patient.CreatePatient;
 using Fiap.Health.Med.User.Manager.Application.DTOs.Patient.GetPatient;
 using Fiap.Health.Med.User.Manager.Application.DTOs.Patient.UpdatePatient;
 using Fiap.Health.Med.User.Manager.Application.Interfaces;
 using Fiap.Health.Med.User.Manager.Domain.Interfaces;
 using Fiap.Health.Med.User.Manager.Domain.Models.Patient;
 using FluentValidation;
-using BCrypt;
-using Fiap.Health.Med.User.Manager.Application.DTOs.Auth.UserSearch;
-using Fiap.Health.Med.Infra.Enums;
+using System.Net;
 
 namespace Fiap.Health.Med.User.Manager.Application.Services
 {
@@ -134,19 +136,19 @@ namespace Fiap.Health.Med.User.Manager.Application.Services
             return Result.Ok();
         }
 
-        public async Task<Result> DeleteAsync(int id)
+        public async Task<Common.V2.Result> DeleteAsync(int id)
         {
             (var patient, var errorMessage) = await this._unitOfWork.PatientRepository.GetByIdAsync(id);
 
             if (!string.IsNullOrWhiteSpace(errorMessage))
-                return Result.Fail($"Erro ao excluir paciente: '{errorMessage}'");
+                return Common.V2.Result.Fail(HttpStatusCode.BadRequest, $"Erro ao excluir paciente: '{errorMessage}'");
 
             if (patient == null)
-                return Result.Fail("Paciente não encontrado.");
+                return Common.V2.Result.Fail(HttpStatusCode.NotFound, "Paciente não encontrado.");
 
             await this._unitOfWork.PatientRepository.DeleteAsync(id);
 
-            return Result.Ok();
+            return Common.V2.Result.Success(HttpStatusCode.NoContent);
         }
     }
 }

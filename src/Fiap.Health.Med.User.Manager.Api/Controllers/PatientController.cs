@@ -88,10 +88,10 @@ namespace Fiap.Health.Med.User.Manager.Api.Controllers
         [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
         public async Task<IActionResult> Delete(int id)
         {
-            if (await _service.DeleteAsync(id) is var result && !result.Success)
-                return BadRequest(result.Errors);
+            if (await _service.DeleteAsync(id) is var result && result.IsSuccess)
+                return StatusCode((int)result.StatusCode);
 
-            return NoContent();
+            return StatusCode((int)result.StatusCode, result);
         }
     }
 }

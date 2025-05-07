@@ -8,6 +8,7 @@ using Fiap.Health.Med.User.Manager.Domain.Interfaces;
 using Fiap.Health.Med.User.Manager.Domain.Models.Doctor;
 using FluentValidation;
 using BCrypt;
+using Fiap.Health.Med.User.Manager.Application.Common;
 
 namespace Fiap.Health.Med.User.Manager.Application.Services
 {
