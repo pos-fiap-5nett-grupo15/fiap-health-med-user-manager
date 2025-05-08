@@ -76,10 +76,10 @@ namespace Fiap.Health.Med.User.Manager.Api.Controllers
             if (id == default)
                 return BadRequest();
 
-            if (await _service.UpdateAsync(id, patient) is var result && !result.Success)
-                return BadRequest(result.Errors);
+            if (await _service.UpdateAsync(id, patient) is var result && result.IsSuccess)
+                return StatusCode((int)result.StatusCode);
 
-            return NoContent();
+            return StatusCode((int)result.StatusCode, result);
         }
 
         [HttpDelete("{id}")]

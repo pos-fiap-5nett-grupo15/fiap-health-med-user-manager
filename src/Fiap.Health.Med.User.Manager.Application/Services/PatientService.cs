@@ -106,20 +106,20 @@ namespace Fiap.Health.Med.User.Manager.Application.Services
                 : Result.Fail($"Erro ao criar paciente: '{errorMessage}'");
         }
 
-        public async Task<Result> UpdateAsync(int patientId, UpdatePatientInput updatePatientInput)
+        public async Task<Common.V2.Result> UpdateAsync(int patientId, UpdatePatientInput updatePatientInput)
         {
             var validationResult = _updatePatientInputValidator.Validate(updatePatientInput);
 
             if (!validationResult.IsValid)
-                return Result.Fail(validationResult.Errors.Select(e => e.ErrorMessage).ToList());
+                return Common.V2.Result.Fail(HttpStatusCode.BadRequest, validationResult.Errors.Select(e => e.ErrorMessage).ToList());
 
             (var existingPatient, var getByIdErrorMessage) = await this._unitOfWork.PatientRepository.GetByIdAsync(patientId);
 
             if (existingPatient == null)
-                return Result.Fail("Paciente não encontrado.");
+                return Common.V2.Result.Fail(HttpStatusCode.NotFound, "Paciente não encontrado.");
 
             if (!string.IsNullOrWhiteSpace(getByIdErrorMessage))
-                return Result.Fail($"Erro ao atualizar paciente: '{getByIdErrorMessage}'");
+                return Common.V2.Result.Fail(HttpStatusCode.InternalServerError, $"Erro ao atualizar paciente: '{getByIdErrorMessage}'");
 
             (var succes, string? errorMessage) = await this._unitOfWork.PatientRepository.UpdateAsync(new Patient
             {
@@ -131,9 +131,9 @@ namespace Fiap.Health.Med.User.Manager.Application.Services
             });
 
             if (!succes)
-                return Result.Fail($"Erro ao atualizar paciente: '{errorMessage}'");
+                return Common.V2.Result.Fail(HttpStatusCode.InternalServerError, $"Erro ao atualizar paciente: '{errorMessage}'");
 
-            return Result.Ok();
+            return Common.V2.Result.Success(HttpStatusCode.NoContent);
         }
 
         public async Task<Common.V2.Result> DeleteAsync(int id)
