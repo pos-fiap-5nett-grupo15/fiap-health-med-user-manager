@@ -12,7 +12,7 @@ namespace Fiap.Health.Med.User.Manager.Application.Interfaces
         Task<Result<GetPatientOutput>> GetByIdAsync(int id);
         Task<Result<UserSearchResponseDto>> GetByDocumentAsync(long document);
         Task<Result> AddAsync(CreatePatientInput patient);
-        Task<Result> UpdateAsync(int patientId, UpdatePatientInput patient);
+        Task<Common.V2.Result> UpdateAsync(int patientId, UpdatePatientInput patient);
         Task<Common.V2.Result> DeleteAsync(int patientId);
     }
 }
