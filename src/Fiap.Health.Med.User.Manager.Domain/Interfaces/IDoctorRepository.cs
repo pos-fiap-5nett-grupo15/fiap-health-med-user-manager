@@ -1,4 +1,4 @@
-﻿using Fiap.Health.Med.Infra.Enums;
+﻿using Fiap.Health.Med.User.Manager.Domain.Enum;
 using Fiap.Health.Med.User.Manager.Domain.Models.Doctor;
 
 namespace Fiap.Health.Med.User.Manager.Domain.Interfaces

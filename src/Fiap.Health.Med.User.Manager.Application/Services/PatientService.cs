@@ -1,5 +1,5 @@
 ﻿using BCrypt;
-using Fiap.Health.Med.Infra.Enums;
+using Fiap.Health.Med.User.Manager.Domain.Enum;
 using Fiap.Health.Med.User.Manager.Application.Common;
 using Fiap.Health.Med.User.Manager.Application.DTOs.Auth.UserSearch;
 using Fiap.Health.Med.User.Manager.Application.DTOs.Patient.CreatePatient;

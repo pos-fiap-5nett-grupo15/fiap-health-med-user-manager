@@ -9,6 +9,6 @@ namespace Fiap.Health.Med.User.Manager.Application.DTOs.Doctor.CreateDoctor
         public string Name { get; set; } = string.Empty;
         public string Password { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
-        public Especialidade MedicalSpecialty { get; set; }
+        public EMedicalSpecialty MedicalSpecialty { get; set; }
     }
 }

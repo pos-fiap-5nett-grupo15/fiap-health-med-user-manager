@@ -1,8 +1,8 @@
-﻿using Fiap.Health.Med.User.Manager.Domain.Interfaces;
+﻿using Dapper;
+using Fiap.Health.Med.User.Manager.Domain.Enum;
+using Fiap.Health.Med.User.Manager.Domain.Interfaces;
 using Fiap.Health.Med.User.Manager.Domain.Models.Doctor;
-using Dapper;
 using Fiap.Health.Med.User.Manager.Infrastructure.UnitOfWork;
-using Fiap.Health.Med.Infra.Enums;
 
 namespace Fiap.Health.Med.User.Manager.Infrastructure.Repositories
 {
