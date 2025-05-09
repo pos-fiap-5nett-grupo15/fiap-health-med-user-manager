@@ -30,12 +30,12 @@ spec:
         - name: ConnectionStrings__DefaultConnection
           valueFrom:
             secretKeyRef:
-              name: db-connection
+              name: db-connection-user
               key: ConnectionStrings__DefaultConnection
         - name: ConnectionStrings__DatabaseDllConnection
           valueFrom:
             secretKeyRef:
-              name: db-connection
+              name: db-connection-user
               key: ConnectionStrings__DatabaseDllConnection
 ---
 apiVersion: v1
