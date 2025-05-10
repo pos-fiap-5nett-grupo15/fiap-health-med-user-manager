@@ -1,14 +1,16 @@
-﻿using Fiap.Health.Med.User.Manager.Domain.Enum;
+using BCrypt;
+using Fiap.Health.Med.User.Manager.Application.Common;
+using Fiap.Health.Med.User.Manager.Domain.Enum;
 using Fiap.Health.Med.User.Manager.Application.DTOs.Auth.UserSearch;
 using Fiap.Health.Med.User.Manager.Application.DTOs.Doctor.CreateDoctor;
-using Fiap.Health.Med.User.Manager.Application.DTOs.Doctor.GetDoctorById;
+using Fiap.Health.Med.User.Manager.Application.DTOs.Doctor.GetById;
+using Fiap.Health.Med.User.Manager.Application.DTOs.Doctor.GetDoctorsByFilters;
 using Fiap.Health.Med.User.Manager.Application.DTOs.Doctor.UpdateDoctor;
 using Fiap.Health.Med.User.Manager.Application.Interfaces;
 using Fiap.Health.Med.User.Manager.Domain.Interfaces;
 using Fiap.Health.Med.User.Manager.Domain.Models.Doctor;
 using FluentValidation;
-using BCrypt;
-using Fiap.Health.Med.User.Manager.Application.Common;
+using System.Net;
 
 namespace Fiap.Health.Med.User.Manager.Application.Services
 {
@@ -28,64 +30,43 @@ namespace Fiap.Health.Med.User.Manager.Application.Services
             _updateDoctorInputValidator = updateDoctorInputValidator;
         }
 
-        public async Task<Result<IEnumerable<GetDoctorOutput>>> GetByFilterAsync(string? doctorName, EMedicalSpecialty? doctorSpecialty, int? doctorDoncilNumber, string? doctorCrmUf)
+        public async Task<Common.V2.Result<GetDoctorsByFiltersOutput>> GetByFilterAsync(
+            string? doctorName,
+            EMedicalSpecialty? doctorSpecialty,
+            int? doctorDoncilNumber,
+            string? doctorCrmUf,
+            int currentPage,
+            int pageSize,
+            CancellationToken ct)
         {
             try
             {
-                var response = await this._unitOfWork.DoctorRepository.GetByFilterAsync(doctorName, doctorSpecialty, doctorDoncilNumber, doctorCrmUf);
+                (var list, var total) = await this._unitOfWork.DoctorRepository.GetByFilterAsync(doctorName, doctorSpecialty, doctorDoncilNumber, doctorCrmUf, currentPage, pageSize, ct);
 
-                var responseDto = response.Select(m => new GetDoctorOutput
+                return Common.V2.Result<GetDoctorsByFiltersOutput>.Success(HttpStatusCode.OK, new GetDoctorsByFiltersOutput
                 {
-                    Id = m.Id,
-                    CrmNumber = m.CrmNumber,
-                    CrmUf = m.CrmUf,
-                    Name = m.Name,
-                    Email = m.Email,
-                    MedicalSpecialty = m.MedicalSpecialty
+                    CurrentPage = currentPage,
+                    PageSize = pageSize,
+                    Total = total,
+                    Doctors = list
                 });
-
-                return Result<IEnumerable<GetDoctorOutput>>.Ok(responseDto);
             }
             catch (Exception e)
             {
-                return Result<IEnumerable<GetDoctorOutput>>.Fail($"Erro ao buscar médicos: {e.Message}");
+                return Common.V2.Result<GetDoctorsByFiltersOutput>.Fail(HttpStatusCode.InternalServerError, $"Erro ao buscar médicos: {e.Message}");
             }
         }
 
-        public async Task<Result<List<GetDoctorOutput>>> GetAllAsync()
+        public async Task<Result<GetByIdOutput>> GetByIdAsync(int id, CancellationToken ct)
         {
             try
             {
-                var retorno = await this._unitOfWork.DoctorRepository.GetAllAsync();
-
-                var responseDto = retorno.Select(m => new GetDoctorOutput
-                {
-                    Id = m.Id,
-                    CrmNumber = m.CrmNumber,
-                    CrmUf = m.CrmUf,
-                    Name = m.Name,
-                    Email = m.Email,
-                    MedicalSpecialty = m.MedicalSpecialty
-                });
-
-                return Result<List<GetDoctorOutput>>.Ok(responseDto.ToList());
-            }
-            catch (Exception e)
-            {
-                return Result<List<GetDoctorOutput>>.Fail($"Erro ao buscar médicos: '{e.Message}'");
-            }
-        }
-
-        public async Task<Result<GetDoctorOutput>> GetByIdAsync(int id)
-        {
-            try
-            {
-                var doctor = await this._unitOfWork.DoctorRepository.GetByIdAsync(id);
+                var doctor = await this._unitOfWork.DoctorRepository.GetByIdAsync(id, ct);
 
                 if (doctor == null)
-                    return Result<GetDoctorOutput>.Fail("Médico não encontrado.");
+                    return Result<GetByIdOutput>.Fail("Médico não encontrado.");
 
-                var responseDto = new GetDoctorOutput
+                var responseDto = new GetByIdOutput
                 {
                     Id = doctor.Id,
                     CrmNumber = doctor.CrmNumber,
@@ -95,19 +76,19 @@ namespace Fiap.Health.Med.User.Manager.Application.Services
                     MedicalSpecialty = doctor.MedicalSpecialty
                 };
 
-                return Result<GetDoctorOutput>.Ok(responseDto);
+                return Result<GetByIdOutput>.Ok(responseDto);
             }
             catch (Exception e)
             {
-                return Result<GetDoctorOutput>.Fail($"Erro ao buscar médico: '{e.Message}'");
+                return Result<GetByIdOutput>.Fail($"Erro ao buscar médico: '{e.Message}'");
             }
         }
 
-        public async Task<Result<UserSearchResponseDto>> GetByConcilAsync(string concilUf, int concilNumber)
+        public async Task<Result<UserSearchResponseDto>> GetByConcilAsync(string concilUf, int concilNumber, CancellationToken ct)
         {
             try
             {
-                var doctor = await this._unitOfWork.DoctorRepository.GetByConcilAsync(concilUf, concilNumber);
+                var doctor = await this._unitOfWork.DoctorRepository.GetByConcilAsync(concilUf, concilNumber, ct);
                 if (doctor == null)
                     return Result<UserSearchResponseDto>.Fail("Médico não encontrado.");
                 var responseDto = new UserSearchResponseDto
@@ -124,7 +105,7 @@ namespace Fiap.Health.Med.User.Manager.Application.Services
             }
         }
 
-        public async Task<Result<int>> AddAsync(CreateDoctorInput createDoctorInput)
+        public async Task<Result<int>> AddAsync(CreateDoctorInput createDoctorInput, CancellationToken ct)
         {
             try
             {
@@ -141,7 +122,7 @@ namespace Fiap.Health.Med.User.Manager.Application.Services
                     HashedPassword = BCryptHelper.HashPassword(createDoctorInput.Password, BCryptHelper.GenerateSalt()),
                     Email = createDoctorInput.Email,
                     MedicalSpecialty = createDoctorInput.MedicalSpecialty
-                });
+                }, ct);
 
                 return Result<int>.Ok(doctorId);
             }
@@ -151,7 +132,7 @@ namespace Fiap.Health.Med.User.Manager.Application.Services
             }
         }
 
-        public async Task<Result> UpdateAsync(int doctorId, UpdateDoctorInput updateDoctorInput)
+        public async Task<Result> UpdateAsync(int doctorId, UpdateDoctorInput updateDoctorInput, CancellationToken ct)
         {
             try
             {
@@ -160,7 +141,7 @@ namespace Fiap.Health.Med.User.Manager.Application.Services
                 if (!validationResult.IsValid)
                     return Result.Fail(validationResult.Errors.Select(e => e.ErrorMessage).ToList());
 
-                var existingDoctor = await this._unitOfWork.DoctorRepository.GetByIdAsync(doctorId);
+                var existingDoctor = await this._unitOfWork.DoctorRepository.GetByIdAsync(doctorId, ct);
 
                 if (existingDoctor == null)
                     return Result.Fail("Médico não encontrado.");
@@ -173,7 +154,8 @@ namespace Fiap.Health.Med.User.Manager.Application.Services
                     HashedPassword = updateDoctorInput.HashedPassword ?? existingDoctor.HashedPassword,
                     Email = updateDoctorInput.Email ?? existingDoctor.Email,
                     MedicalSpecialty = updateDoctorInput.MedicalSpecialty ?? existingDoctor.MedicalSpecialty
-                });
+                },
+                ct);
             }
             catch (Exception e)
             {
@@ -182,16 +164,16 @@ namespace Fiap.Health.Med.User.Manager.Application.Services
             return Result.Ok();
         }
 
-        public async Task<Result> DeleteAsync(int id)
+        public async Task<Result> DeleteAsync(int id, CancellationToken ct)
         {
             try
             {
-                var doctor = await this._unitOfWork.DoctorRepository.GetByIdAsync(id);
+                var doctor = await this._unitOfWork.DoctorRepository.GetByIdAsync(id, ct);
 
                 if (doctor == null)
                     return Result.Fail("Médico não encontrado.");
 
-                await this._unitOfWork.DoctorRepository.DeleteAsync(id);
+                await this._unitOfWork.DoctorRepository.DeleteAsync(id, ct);
 
                 return Result.Ok();
             }

@@ -1,21 +1,21 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.7" />
-    <PackageReference Include="Microsoft.Data.SqlClient" Version="6.0.1" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
-    <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="8.0.0" />
-  </ItemGroup>
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+	</PropertyGroup>
 
 	<ItemGroup>
-    <ProjectReference Include="..\Fiap.Health.Med.User.Manager.Application\Fiap.Health.Med.User.Manager.Application.csproj" />
-    <ProjectReference Include="..\Fiap.Health.Med.User.Manager.CrossCutting\Fiap.Health.Med.User.Manager.CrossCutting.csproj" />
+		<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.7" />
+		<PackageReference Include="Microsoft.Data.SqlClient" Version="6.0.1" />
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="8.0.0" />
+		<PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="8.0.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Fiap.Health.Med.User.Manager.Application\Fiap.Health.Med.User.Manager.Application.csproj" />
+		<ProjectReference Include="..\Fiap.Health.Med.User.Manager.CrossCutting\Fiap.Health.Med.User.Manager.CrossCutting.csproj" />
 	</ItemGroup>
 
 

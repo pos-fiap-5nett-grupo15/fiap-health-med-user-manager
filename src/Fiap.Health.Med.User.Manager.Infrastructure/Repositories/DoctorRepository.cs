@@ -15,14 +15,7 @@ namespace Fiap.Health.Med.User.Manager.Infrastructure.Repositories
             this._database = database;
         }
 
-        public async Task<IEnumerable<Doctor>> GetAllAsync()
-        {
-            var query = @"SELECT * FROM Users.Doctors";
-
-            return await _database.Connection.QueryAsync<Doctor>(query);
-        }
-
-        public async Task<Doctor> GetByIdAsync(int id)
+        public async Task<Doctor?> GetByIdAsync(int id, CancellationToken ct)
         {
 
             var query = @"SELECT Id, CrmNumber, CrmUf, Name, HashedPassword, MedicalSpecialty, Email 
@@ -32,7 +25,7 @@ namespace Fiap.Health.Med.User.Manager.Infrastructure.Repositories
             return await _database.Connection.QueryFirstOrDefaultAsync<Doctor>(query, new { Id = id });
         }
 
-        public async Task<Doctor?> GetByConcilAsync(string concilUf, int concilNumber)
+        public async Task<Doctor?> GetByConcilAsync(string concilUf, int concilNumber, CancellationToken ct)
         {
             var query = @"SELECT Id, CrmNumber, CrmUf, Name, HashedPassword, MedicalSpecialty, Email 
                       FROM Users.Doctors 
@@ -41,7 +34,7 @@ namespace Fiap.Health.Med.User.Manager.Infrastructure.Repositories
             return await _database.Connection.QueryFirstOrDefaultAsync<Doctor>(query, new { CrmNumber = concilNumber, CrmUf = concilUf });
         }
 
-        public async Task<int> AddAsync(Doctor doctor)
+        public async Task<int> AddAsync(Doctor doctor, CancellationToken ct)
         {
 
             var query = @"INSERT INTO Users.Doctors (CrmNumber, CrmUf, Name, HashedPassword, MedicalSpecialty, Email)
@@ -50,7 +43,7 @@ namespace Fiap.Health.Med.User.Manager.Infrastructure.Repositories
             return await _database.Connection.ExecuteScalarAsync<int>(query, doctor);
         }
 
-        public async Task UpdateAsync(Doctor doctor)
+        public async Task UpdateAsync(Doctor doctor, CancellationToken ct)
         {
 
             var query = @"UPDATE Users.Doctors 
@@ -61,7 +54,7 @@ namespace Fiap.Health.Med.User.Manager.Infrastructure.Repositories
             await _database.Connection.ExecuteAsync(query, doctor);
         }
 
-        public async Task DeleteAsync(int id)
+        public async Task DeleteAsync(int id, CancellationToken ct)
         {
 
             var query = @"DELETE FROM Users.Doctors WHERE Id = @Id";
@@ -69,22 +62,24 @@ namespace Fiap.Health.Med.User.Manager.Infrastructure.Repositories
             await _database.Connection.ExecuteAsync(query, new { Id = id });
         }
 
-        public async Task<IEnumerable<Doctor>> GetByFilterAsync(string? doctorName, EMedicalSpecialty? doctorSpecialty, int? doctorConcilNumber, string? doctorCrmUf)
+        public async Task<(IEnumerable<Doctor>, int)> GetByFilterAsync(string? doctorName, EMedicalSpecialty? doctorSpecialty, int? doctorConcilNumber, string? doctorCrmUf, int currentPage, int pageSize, CancellationToken ct)
         {
             var query = @"SELECT Id, CrmNumber, CrmUf, Name, HashedPassword, MedicalSpecialty, Email 
                           FROM Users.Doctors 
                           WHERE (@DoctorName IS NULL OR Name LIKE '%' + @DoctorName + '%') 
-                          AND (@DoctorSpecialty IS NULL OR MedicalSpecialty = @DoctorSpecialty) 
-                          AND (@DoctorConcilNumber IS NULL OR CrmNumber = @DoctorConcilNumber)
-                          AND (@DoctorConcilUf IS NULL OR CrmUf LIKE @DoctorConcilUf)";
+                            AND (@DoctorSpecialty IS NULL OR MedicalSpecialty = @DoctorSpecialty) 
+                            AND (@DoctorConcilNumber IS NULL OR CrmNumber = @DoctorConcilNumber)
+                            AND (@DoctorConcilUf IS NULL OR CrmUf LIKE @DoctorConcilUf)";
 
-            return await _database.Connection.QueryAsync<Doctor>(query, new
+            var result = (await _database.Connection.QueryAsync<Doctor>(query, new
             {
                 DoctorName = doctorName,
                 DoctorSpecialty = doctorSpecialty,
                 DoctorConcilNumber = doctorConcilNumber,
                 DoctorConcilUf = doctorCrmUf
-            });
+            })).ToList();
+
+            return (result.Skip((currentPage - 1) * pageSize).Take(pageSize), result.Count);
         }
     }
 }

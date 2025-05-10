@@ -1,8 +1,8 @@
 ﻿using Fiap.Health.Med.User.Manager.Domain.Enum;
 
-namespace Fiap.Health.Med.User.Manager.Application.DTOs.Doctor.GetDoctorById
+namespace Fiap.Health.Med.User.Manager.Application.DTOs.Doctor.GetById
 {
-    public class GetDoctorOutput
+    public class GetByIdOutput
     {
         public int Id { get; set; }
         public int CrmNumber { get; set; }

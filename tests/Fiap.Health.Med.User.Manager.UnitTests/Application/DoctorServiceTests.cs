@@ -32,15 +32,23 @@ namespace Fiap.Health.Med.User.Manager.UnitTests.Application
                 new Doctor { Id = 1, Name = "John Doe", CrmNumber = 12345, CrmUf = "SP" },
                 new Doctor { Id = 2, Name = "Jane Doe", CrmNumber = 67890, CrmUf = "RJ" }
             };
-            _unitOfWorkMock.Setup(u => u.DoctorRepository.GetByFilterAsync(It.IsAny<string>(), It.IsAny<EMedicalSpecialty?>(), It.IsAny<int?>(), It.IsAny<string>()))
-                .ReturnsAsync(doctors);
+            _unitOfWorkMock
+                .Setup(u => u.DoctorRepository.GetByFilterAsync(
+                    It.IsAny<string?>(),
+                    It.IsAny<EMedicalSpecialty?>(),
+                    It.IsAny<int?>(),
+                    It.IsAny<string?>(),
+                    It.IsAny<int>(),
+                    It.IsAny<int>(),
+                    It.IsAny<CancellationToken>()))
+                .ReturnsAsync((doctors, doctors.Count));
             // Act
-            var result = await doctorService.GetByFilterAsync(null, null, null, null);
+            var result = await doctorService.GetByFilterAsync(null, null, null, null, 1, 10, CancellationToken.None);
 
             // Assert
-            Assert.True(result.Success);
+            Assert.True(result.IsSuccess);
             Assert.NotNull(result.Data);
-            Assert.Equal(2, result.Data.Count());
+            Assert.Equal(2, result.Data.Total);
         }
 
         [Fact]
@@ -48,15 +56,23 @@ namespace Fiap.Health.Med.User.Manager.UnitTests.Application
         {
             // Arrange
             var doctorService = new DoctorService(_unitOfWorkMock.Object, _createDoctorInputValidatorMock.Object, _updateDoctorInputValidatorMock.Object);
-            _unitOfWorkMock.Setup(u => u.DoctorRepository.GetByFilterAsync(It.IsAny<string>(), It.IsAny<EMedicalSpecialty?>(), It.IsAny<int?>(), It.IsAny<string>()))
-                .ReturnsAsync(Enumerable.Empty<Doctor>());
+            _unitOfWorkMock
+                .Setup(u => u.DoctorRepository.GetByFilterAsync(
+                    It.IsAny<string?>(),
+                    It.IsAny<EMedicalSpecialty?>(),
+                    It.IsAny<int?>(),
+                    It.IsAny<string?>(),
+                    It.IsAny<int>(),
+                    It.IsAny<int>(),
+                    It.IsAny<CancellationToken>()))
+                .ReturnsAsync((Enumerable.Empty<Doctor>(), 0));
 
             // Act
-            var result = await doctorService.GetByFilterAsync(null, null, null, null);
+            var result = await doctorService.GetByFilterAsync(null, null, null, null, 1, 10, CancellationToken.None);
 
             // Assert
             Assert.NotNull(result.Data);
-            Assert.Empty(result.Data);
+            Assert.Empty(result.Data.Doctors);
         }
     }
 }

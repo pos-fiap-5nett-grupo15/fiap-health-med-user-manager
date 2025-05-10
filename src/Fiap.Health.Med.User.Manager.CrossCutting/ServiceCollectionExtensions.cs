@@ -9,7 +9,6 @@ using Fiap.Health.Med.User.Manager.Application.Validators.Doctor.UpdateDoctor;
 using Fiap.Health.Med.User.Manager.Application.Validators.Patient.CreatePatient;
 using Fiap.Health.Med.User.Manager.Application.Validators.Patient.UpdatePatient;
 using Fiap.Health.Med.User.Manager.Domain.Interfaces;
-using Fiap.Health.Med.User.Manager.Domain.Models.Doctor;
 using Fiap.Health.Med.User.Manager.Infrastructure.Migrations;
 using Fiap.Health.Med.User.Manager.Infrastructure.Repositories;
 using Fiap.Health.Med.User.Manager.Infrastructure.UnitOfWork;
