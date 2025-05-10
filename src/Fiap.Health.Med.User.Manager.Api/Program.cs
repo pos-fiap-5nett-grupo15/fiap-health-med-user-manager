@@ -26,7 +26,7 @@ internal class Program
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "API Hackaton v1");
             });
         }
-
+        app.MapHealthChecks("/health");
         app.UseRouting();
         app.UseAuthorization();
         app.MapControllers();
