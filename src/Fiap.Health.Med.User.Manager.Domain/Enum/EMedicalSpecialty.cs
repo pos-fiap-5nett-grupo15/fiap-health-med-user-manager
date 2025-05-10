@@ -1,6 +1,6 @@
 ﻿namespace Fiap.Health.Med.User.Manager.Domain.Enum
 {
-    public enum Especialidade
+    public enum EMedicalSpecialty
     {
         Pediatria = 1,
         Ortopedia = 2,

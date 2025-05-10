@@ -9,6 +9,6 @@ namespace Fiap.Health.Med.User.Manager.Application.DTOs.Doctor.UpdateDoctor
         public string? Name { get; set; }
         public string? HashedPassword { get; set; }
         public string? Email { get; set; } 
-        public Especialidade? MedicalSpecialty { get; set; }
+        public EMedicalSpecialty? MedicalSpecialty { get; set; }
     }
 }

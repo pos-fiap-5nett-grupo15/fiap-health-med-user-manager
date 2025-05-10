@@ -18,11 +18,5 @@
     <ProjectReference Include="..\Fiap.Health.Med.User.Manager.CrossCutting\Fiap.Health.Med.User.Manager.CrossCutting.csproj" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <Reference Include="Fiap.Health.Med.Infra">
-	    <HintPath>..\..\dependencies\Fiap.Health.Med.Infra.dll</HintPath>
-	  </Reference>
-	</ItemGroup>
-
 
 </Project>

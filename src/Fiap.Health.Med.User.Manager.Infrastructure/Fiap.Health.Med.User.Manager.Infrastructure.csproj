@@ -22,10 +22,4 @@
 		<PackageReference Include="FluentMigrator.Runner.SqlServer" Version="7.0.0" />
 	</ItemGroup>
 
-	<ItemGroup>
-		<Reference Include="Fiap.Health.Med.Infra">
-			<HintPath>..\..\dependencies\Fiap.Health.Med.Infra.dll</HintPath>
-		</Reference>
-	</ItemGroup>
-
 </Project>
