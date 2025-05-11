@@ -148,10 +148,11 @@ namespace Fiap.Health.Med.User.Manager.Application.Services
 
                 await this._unitOfWork.DoctorRepository.UpdateAsync(new Doctor
                 {
+                    Id = doctorId,
                     CrmNumber = updateDoctorInput.CrmNumber ?? existingDoctor.CrmNumber,
                     CrmUf = updateDoctorInput.CrmUf ?? existingDoctor.CrmUf,
                     Name = updateDoctorInput.Name ?? existingDoctor.Name,
-                    HashedPassword = updateDoctorInput.HashedPassword ?? existingDoctor.HashedPassword,
+                    HashedPassword = string.IsNullOrEmpty(updateDoctorInput.Password) ? existingDoctor.HashedPassword : BCryptHelper.HashPassword(updateDoctorInput.Password, BCryptHelper.GenerateSalt()),
                     Email = updateDoctorInput.Email ?? existingDoctor.Email,
                     MedicalSpecialty = updateDoctorInput.MedicalSpecialty ?? existingDoctor.MedicalSpecialty
                 },

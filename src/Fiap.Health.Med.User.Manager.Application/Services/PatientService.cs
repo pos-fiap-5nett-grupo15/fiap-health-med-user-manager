@@ -126,7 +126,7 @@ namespace Fiap.Health.Med.User.Manager.Application.Services
                 Id = patientId,
                 Document = updatePatientInput.Document ?? existingPatient.Document,
                 Name = updatePatientInput.Name ?? existingPatient.Name,
-                HashedPassword = updatePatientInput.HashedPassword ?? existingPatient.HashedPassword,
+                HashedPassword = string.IsNullOrEmpty(updatePatientInput.Password) ? existingPatient.HashedPassword : BCryptHelper.HashPassword(updatePatientInput.Password, BCryptHelper.GenerateSalt()),
                 Email = updatePatientInput.Email ?? existingPatient.Email
             });
 

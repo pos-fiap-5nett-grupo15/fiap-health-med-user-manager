@@ -28,9 +28,9 @@ namespace Fiap.Health.Med.User.Manager.Application.Validators.Patient.UpdatePati
                     .EmailAddress().WithMessage("Email inválido.");
             });
 
-            When(x => x.HashedPassword is not null, () =>
+            When(x => x.Password is not null, () =>
             {
-                RuleFor(x => x.HashedPassword)
+                RuleFor(x => x.Password)
                     .NotEmpty().WithMessage("A senha é obrigatória.");
             });
         }

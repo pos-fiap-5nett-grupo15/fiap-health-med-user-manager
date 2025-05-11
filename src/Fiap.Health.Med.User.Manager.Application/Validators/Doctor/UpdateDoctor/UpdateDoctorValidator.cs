@@ -40,9 +40,9 @@ namespace Fiap.Health.Med.User.Manager.Application.Validators.Doctor.UpdateDocto
                     .IsInEnum().WithMessage("Especialidade inválida.");
             });
 
-            When(x => x.HashedPassword is not null, () =>
+            When(x => x.Password is not null, () =>
             {
-                RuleFor(m => m.HashedPassword)
+                RuleFor(m => m.Password)
                     .NotEmpty().WithMessage("A senha é obrigatória.");
             });
         }
