@@ -7,8 +7,8 @@ namespace Fiap.Health.Med.User.Manager.Application.DTOs.Doctor.UpdateDoctor
         public int? CrmNumber { get; set; }
         public string? CrmUf { get; set; }
         public string? Name { get; set; }
-        public string? HashedPassword { get; set; }
-        public string? Email { get; set; } 
+        public string? Password { get; set; }
+        public string? Email { get; set; }
         public EMedicalSpecialty? MedicalSpecialty { get; set; }
     }
 }
