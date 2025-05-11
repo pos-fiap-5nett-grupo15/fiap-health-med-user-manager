@@ -1,7 +1,7 @@
 trigger:
   branches:
     include:
-      - feat/pipelines
+      - develop
   paths:
     exclude:
       - README.md
