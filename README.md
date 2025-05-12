@@ -42,7 +42,7 @@ Projeto criado pelo **Grupo 15** do curso de **Arquitetura de Sistemas .NET com 
 Vá até o diretório da solução e execute o seguinte comando para realizar o build da imagem docker a ser utilizada.
 
 ``` shell
-    docker build -f ./infrastructure/docker/api/Dockerfile -t schedule-app .
+    docker build -f ./infrastructure/docker/api/Dockerfile -t user-app .
 ```
 
 Ou se estiver na pasta de infra
